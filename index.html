@@ -5,84 +5,100 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PlayPal.ID — QRIS</title>
 <style>
+  /* ---------- Design tokens (statis) ---------- */
   :root{
+    --page-pad: 6vh;
+    --container-w: min(360px, 92vw);
+    --qr-radius: 14px;
+    --qr-pad: 14px;
+    --hairline: rgba(0,0,0,.10);
     --bg: #ffffff;
     --fg: #111113;
     --muted: #6b6b70;
-    --card-w: min(420px, 92vw);
-    --radius: 16px;
-    --pad: clamp(20px, 4vw, 28px);
   }
   @media (prefers-color-scheme: dark){
     :root{
+      --hairline: rgba(255,255,255,.16);
       --bg: #0b0b0d;
       --fg: #f5f5f7;
       --muted: #9a9aa0;
     }
   }
 
-  html, body{
-    height:100%;
+  /* ---------- Base ---------- */
+  html,body{height:100%;}
+  body{
     margin:0;
-    background: var(--bg);
-    color: var(--fg);
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
-          "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    background:var(--bg);
+    color:var(--fg);
+    font:16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
+         "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
   }
 
-  .wrap{
+  /* ---------- Layout ---------- */
+  .stage{
     min-height:100%;
     display:grid;
     place-items:center;
-    padding: 7vh 16px;
+    padding:var(--page-pad) 16px;
   }
 
-  .card{
-    width: var(--card-w);
-    padding: var(--pad);
-    border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
-    border-radius: var(--radius);
+  .panel{
+    width:var(--container-w);
+    padding:24px;
+    border:1px solid var(--hairline);
+    border-radius:18px;
     background: color-mix(in oklab, var(--bg) 96%, white);
   }
 
-  .brand{
+  /* ---------- Typography ---------- */
+  h1{
+    margin:2px 0 18px;
     text-align:center;
-    margin: 4px 0 18px;
-    letter-spacing: .2px;
-    font-weight: 700;
-    font-size: clamp(18px, 3.2vw, 22px);
+    font-weight:700;
+    font-size: clamp(18px, 3.3vw, 22px);
+    letter-spacing:.2px;
+  }
+  .sub{
+    text-align:center;
+    margin:-6px 0 18px;
+    color:var(--muted);
+    font-size:13px;
   }
 
+  /* ---------- QR ---------- */
   .qr{
     display:block;
     width:100%;
-    max-width: 320px;
-    margin: 0 auto;
-    aspect-ratio: 1/1;
-    background:#fff;           /* menjaga kontras QR */
-    border: 1px solid rgba(0,0,0,.08);
-    border-radius: 12px;
-    padding: clamp(8px, 2.2vw, 14px);
-    object-fit: contain;
+    max-width:320px;
+    aspect-ratio:1/1;
+    margin:0 auto;
+    background:#fff;                 /* menjaga kontras scanner */
+    border:1px solid rgba(0,0,0,.08);/* hairline tipis */
+    border-radius:var(--qr-radius);
+    padding:var(--qr-pad);
+    object-fit:contain;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 
-  /* Versi cetak: benar-benar minim */
+  /* ---------- Print ---------- */
   @media print{
-    body{ background:#fff; }
-    .card{ border: none; }
+    body{background:#fff;}
+    .panel{border:none; border-radius:0; padding:0;}
+    .sub{display:none;}
   }
 </style>
 </head>
 <body>
-  <main class="wrap">
-    <section class="card" aria-label="QRIS PlayPal.ID">
-      <h1 class="brand">PlayPal.ID</h1>
-      <!-- GANTI src di bawah dengan berkas QRIS hitam-putih kamu -->
-      <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID" />
+  <main class="stage">
+    <section class="panel" aria-label="QRIS PlayPal.ID">
+      <h1>PlayPal.ID</h1>
+      <p class="sub">Scan untuk bayar via QRIS</p>
+      <!-- GANTI src di bawah dengan file QRIS hitam-putih kamu -->
+      <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID"/>
     </section>
   </main>
 </body>
