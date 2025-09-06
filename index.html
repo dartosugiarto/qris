@@ -4,23 +4,26 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PlayPal.ID — QRIS</title>
+
+<!-- ================== ULTRA APPLE PREMIUM (STATIS) ================== -->
 <style>
-  /* ===== Palet premium (statis, ala Apple) */
+  /* ---- Palet & ukuran presisi (px), tanpa responsif/animasi ---- */
   :root{
-    --page-bg: #F5F5F7;     /* Apple gray */
-    --card-bg: #FFFFFF;     /* putih bersih */
-    --text:    #111113;     /* hampir-hitam */
-    --muted:   #6E6E73;     /* iOS gray */
-    --hair:    rgba(0,0,0,.10); /* hairline 1px */
-    --card-w:  384px;       /* lebar kartu presisi */
-    --card-p:  28px;        /* padding kartu */
-    --qr-pad:  14px;        /* padding bingkai QR */
-    --qr-rad:  16px;        /* radius QR */
-    --card-r:  20px;        /* radius kartu */
+    --page-bg: #F5F5F7;     /* Apple light gray */
+    --card-bg: #FFFFFF;     /* Putih bersih */
+    --text:    #0E0E11;     /* Nyaris hitam yang lembut */
+    --muted:   #6E6E73;     /* iOS gray untuk teks bantu */
+    --hair:    rgba(0,0,0,.10); /* Hairline 1px */
+    --card-w:  384px;       /* Lebar kartu fix */
+    --card-r:  22px;        /* Radius kartu */
+    --card-p:  28px;        /* Padding kartu */
+    --title-fs: 22px;       /* Ukuran judul fix */
+    --qr-pad:  14px;        /* Padding bingkai QR */
+    --qr-r:    16px;        /* Radius bingkai QR */
   }
 
-  /* ===== Reset dasar */
-  * { box-sizing: border-box; }
+  /* ---- Reset halus ---- */
+  *{ box-sizing: border-box; }
   html, body { height: 100%; }
   body{
     margin: 0;
@@ -31,71 +34,90 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 
-    /* Halaman statis: tak ada scroll atau geser */
+    /* Halaman statis: tidak bisa di-scroll/geser */
     overflow: hidden;
   }
 
-  /* ===== Pemosisian presisi: benar2 di tengah viewport */
-  .center{
-    position: fixed;       /* kunci terhadap viewport */
+  /* ---- Kartu dikunci di tengah viewport (tanpa gerak) ---- */
+  .card{
+    position: fixed;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
+
     width: var(--card-w);
+    padding: var(--card-p);
     background: var(--card-bg);
     border: 1px solid var(--hair);
     border-radius: var(--card-r);
-    padding: var(--card-p);
+
+    /* Bayangan premium: tipis, terkontrol */
+    box-shadow:
+      0 1px 2px rgba(0,0,0,.06),
+      0 10px 30px rgba(0,0,0,.12);
   }
 
-  /* ===== Teks brand */
+  /* ---- Judul brand (tunggal, tebal, center) ---- */
   .brand{
     margin: 0 0 18px 0;
     text-align: center;
     font-weight: 700;
-    font-size: 22px;       /* ukuran tetap untuk rasa stabil */
+    font-size: var(--title-fs);
     letter-spacing: .2px;
   }
 
-  /* ===== Bingkai QR */
+  /* ---- QR hitam dengan bingkai putih bersih untuk kontras scanner ---- */
   .qr{
     display: block;
     width: 100%;
     height: auto;
-    max-width: 328px;      /* 384 - (2*28) padding card -> ruang presisi */
+    max-width: calc(var(--card-w) - (var(--card-p) * 2));
     margin: 0 auto;
-    background: #FFFFFF;   /* kontras scanner */
+
+    background: #FFFFFF;
     border: 1px solid rgba(0,0,0,.08);
-    border-radius: var(--qr-rad);
+    border-radius: var(--qr-r);
     padding: var(--qr-pad);
+
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 
-  /* ===== Catatan kecil di bawah (opsional) */
+  /* ---- Caption halus (opsional). Hapus jika ingin super-minimal ---- */
   .hint{
     margin: 12px 0 0 0;
     text-align: center;
     font-size: 12px;
     color: var(--muted);
+    user-select: none;
   }
 
-  /* ===== Cetak tetap rapi & statis */
+  /* ---- Mode cetak tetap presisi & bersih ---- */
   @media print{
     body{ background: #fff; overflow: visible; }
-    .center{ position: static; transform: none; margin: 0 auto; }
+    .card{
+      position: static; transform: none; margin: 0 auto;
+      box-shadow: none; border: none; border-radius: 0; padding: 0;
+      width: var(--card-w);
+    }
     .hint{ display: none; }
   }
 </style>
 </head>
 <body>
-  <section class="center" aria-label="QRIS PlayPal.ID">
+  <main class="card" aria-label="Kartu QRIS PlayPal.ID">
     <h1 class="brand">PlayPal.ID</h1>
 
-    <!-- GANTI src di bawah dengan file QRIS hitam-putih kamu -->
-    <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID" />
+    <!-- GANTI src di bawah dengan file QRIS hitam-putih milikmu -->
+    <img
+      class="qr"
+      src="qris.png"
+      alt="Kode QRIS PlayPal.ID"
+      loading="eager"
+      decoding="async"
+    />
 
     <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
-  </section>
+  </main>
 </body>
 </html>
