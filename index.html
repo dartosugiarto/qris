@@ -5,97 +5,97 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PlayPal.ID — QRIS</title>
 <style>
-  /* ===== Tokens */
+  /* ===== Palet premium (statis, ala Apple) */
   :root{
-    --max-w: 384px;             /* lebar kartu */
-    --pad: clamp(22px, 4vw, 28px);
-    --radius: 18px;
-    --qr-pad: clamp(10px, 2.6vw, 14px);
-    --bg: #ffffff;
-    --fg: #0e0e11;
-    --muted: #6e6e73;
-    --line: rgba(0,0,0,.12);
-  }
-  @media (prefers-color-scheme: dark){
-    :root{
-      --bg:#0b0c0f;
-      --fg:#f5f5f7;
-      --muted:#9a9aa0;
-      --line: rgba(255,255,255,.16);
-    }
+    --page-bg: #F5F5F7;     /* Apple gray */
+    --card-bg: #FFFFFF;     /* putih bersih */
+    --text:    #111113;     /* hampir-hitam */
+    --muted:   #6E6E73;     /* iOS gray */
+    --hair:    rgba(0,0,0,.10); /* hairline 1px */
+    --card-w:  384px;       /* lebar kartu presisi */
+    --card-p:  28px;        /* padding kartu */
+    --qr-pad:  14px;        /* padding bingkai QR */
+    --qr-rad:  16px;        /* radius QR */
+    --card-r:  20px;        /* radius kartu */
   }
 
-  /* ===== Base */
-  html,body{height:100%}
+  /* ===== Reset dasar */
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
   body{
-    margin:0;
-    color:var(--fg);
-    background:
-      radial-gradient(1200px 800px at 50% -20%, rgba(0,0,0,.06), transparent),
-      var(--bg);
-    font:16px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",
-         "Helvetica Neue",Helvetica,Arial,sans-serif;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-    padding: max(5vh, 24px) 16px;
+    margin: 0;
+    background: var(--page-bg);
+    color: var(--text);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /* Halaman statis: tak ada scroll atau geser */
+    overflow: hidden;
   }
 
-  /* ===== Layout */
+  /* ===== Pemosisian presisi: benar2 di tengah viewport */
   .center{
-    min-height: calc(100% - max(5vh, 24px)*2);
-    display:grid;
-    place-items:center;
-  }
-  .card{
-    width:min(var(--max-w), 94vw);
-    padding:var(--pad);
-    border-radius:var(--radius);
-    background: color-mix(in oklab, var(--bg) 96%, white);
-    border:1px solid var(--line);
+    position: fixed;       /* kunci terhadap viewport */
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--card-w);
+    background: var(--card-bg);
+    border: 1px solid var(--hair);
+    border-radius: var(--card-r);
+    padding: var(--card-p);
   }
 
-  /* ===== Typography */
+  /* ===== Teks brand */
   .brand{
-    margin: 2px 0 18px;
-    text-align:center;
+    margin: 0 0 18px 0;
+    text-align: center;
     font-weight: 700;
-    font-size: clamp(18px, 3.4vw, 22px);
-    letter-spacing: .18px; /* touch of Apple spacing */
+    font-size: 22px;       /* ukuran tetap untuk rasa stabil */
+    letter-spacing: .2px;
   }
 
-  /* ===== QR */
+  /* ===== Bingkai QR */
   .qr{
-    display:block;
-    width:100%;
-    max-width:320px;
-    aspect-ratio:1/1;      /* menjaga bentuk selalu kotak */
-    margin:0 auto;
-    background:#fff;       /* kontras scanner */
-    border:1px solid rgba(0,0,0,.08);
-    border-radius:14px;
-    padding:var(--qr-pad);
-    object-fit:contain;
-    image-rendering:-webkit-optimize-contrast;
-    image-rendering:crisp-edges;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 328px;      /* 384 - (2*28) padding card -> ruang presisi */
+    margin: 0 auto;
+    background: #FFFFFF;   /* kontras scanner */
+    border: 1px solid rgba(0,0,0,.08);
+    border-radius: var(--qr-rad);
+    padding: var(--qr-pad);
+    object-fit: contain;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
   }
 
-  /* ===== Accessibility & Print */
-  .qr[alt]{ /* hanya memastikan alt selalu ada secara visual reader */
-    /* no-op visual; alt untuk screen-reader */
+  /* ===== Catatan kecil di bawah (opsional) */
+  .hint{
+    margin: 12px 0 0 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
   }
+
+  /* ===== Cetak tetap rapi & statis */
   @media print{
-    body{ background:#fff; padding:0; }
-    .card{ border:none; border-radius:0; background:#fff; padding:0; }
+    body{ background: #fff; overflow: visible; }
+    .center{ position: static; transform: none; margin: 0 auto; }
+    .hint{ display: none; }
   }
 </style>
 </head>
 <body>
-  <main class="center" aria-label="Kartu QRIS">
-    <section class="card" aria-labelledby="brand">
-      <h1 id="brand" class="brand">PlayPal.ID</h1>
-      <!-- GANTI src di bawah dengan file QRIS hitam-putih -->
-      <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID" />
-    </section>
-  </main>
+  <section class="center" aria-label="QRIS PlayPal.ID">
+    <h1 class="brand">PlayPal.ID</h1>
+
+    <!-- GANTI src di bawah dengan file QRIS hitam-putih kamu -->
+    <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID" />
+
+    <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
+  </section>
 </body>
 </html>
