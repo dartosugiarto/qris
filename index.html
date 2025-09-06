@@ -6,123 +6,84 @@
 <title>PlayPal.ID — QRIS</title>
 <style>
   :root{
-    --radius: 24px;
-    --gap: 22px;
+    --bg: #ffffff;
+    --fg: #111113;
+    --muted: #6b6b70;
     --card-w: min(420px, 92vw);
-    --bg: #fff;
-    --fg: #000;
-    --muted: #6e6e73; /* mirip iOS gray */
-    --ring: rgba(0,0,0,.06);
-    --shadow: 0 1px 2px rgba(0,0,0,.06), 0 8px 32px rgba(0,0,0,.12);
+    --radius: 16px;
+    --pad: clamp(20px, 4vw, 28px);
   }
-  @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: dark){
     :root{
-      --bg: #0b0b0f;
+      --bg: #0b0b0d;
       --fg: #f5f5f7;
-      --muted:#9b9ba1;
-      --ring: rgba(255,255,255,.08);
-      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 40px rgba(0,0,0,.6);
+      --muted: #9a9aa0;
     }
   }
 
-  html,body{
+  html, body{
     height:100%;
     margin:0;
-    background: radial-gradient(1200px 800px at 50% -20%, rgba(0,0,0,.06), transparent) , var(--bg);
-    color:var(--fg);
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
+          "Helvetica Neue", Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   .wrap{
     min-height:100%;
     display:grid;
     place-items:center;
-    padding: 6vh 16px;
+    padding: 7vh 16px;
   }
 
   .card{
     width: var(--card-w);
-    background: color-mix(in oklab, var(--bg) 92%, white);
+    padding: var(--pad);
+    border: 1px solid color-mix(in oklab, var(--fg) 12%, transparent);
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--ring);
-    padding: clamp(20px, 4vw, 32px);
+    background: color-mix(in oklab, var(--bg) 96%, white);
   }
 
   .brand{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:12px;
-    margin-bottom: var(--gap);
     text-align:center;
-  }
-  .brand .dot{
-    width: 10px; height: 10px; border-radius:50%;
-    background: var(--fg);
-    opacity:.9;
-  }
-  .brand h1{
-    font-size: clamp(18px, 3.4vw, 22px);
-    font-weight: 700;
+    margin: 4px 0 18px;
     letter-spacing: .2px;
-    margin:0;
-  }
-  .sub{
-    text-align:center;
-    font-size: 14px;
-    color: var(--muted);
-    margin-top: 4px;
+    font-weight: 700;
+    font-size: clamp(18px, 3.2vw, 22px);
   }
 
   .qr{
     display:block;
     width:100%;
     max-width: 320px;
+    margin: 0 auto;
     aspect-ratio: 1/1;
-    margin: 18px auto 6px;
-    background:#fff;            /* menjaga kontras */
-    border-radius: 12px;
+    background:#fff;           /* menjaga kontras QR */
     border: 1px solid rgba(0,0,0,.08);
-    padding: clamp(10px, 2.8vw, 16px);
+    border-radius: 12px;
+    padding: clamp(8px, 2.2vw, 14px);
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 
-  .hint{
-    text-align:center;
-    font-size: 12px;
-    color: var(--muted);
-    margin-top: 10px;
-    letter-spacing:.2px;
-  }
-
-  /* Cetak rapi untuk ditempel */
-  @media print {
+  /* Versi cetak: benar-benar minim */
+  @media print{
     body{ background:#fff; }
-    .card{ box-shadow:none; border-color:#ddd; }
-    .hint{ display:none; }
+    .card{ border: none; }
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <section class="card" aria-label="Kartu QRIS PlayPal.ID">
-      <div class="brand">
-        <span class="dot" aria-hidden="true"></span>
-        <h1>PlayPal.ID</h1>
-        <span class="dot" aria-hidden="true"></span>
-      </div>
-      <p class="sub">Scan untuk bayar via QRIS</p>
-
-      <!-- GANTI src di bawah dengan file QRIS hitam-putih kamu -->
+  <main class="wrap">
+    <section class="card" aria-label="QRIS PlayPal.ID">
+      <h1 class="brand">PlayPal.ID</h1>
+      <!-- GANTI src di bawah dengan berkas QRIS hitam-putih kamu -->
       <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID" />
-
-      <p class="hint">Buka aplikasi pembayaran berlogo QRIS lalu arahkan kamera ke kode di atas.</p>
     </section>
-  </div>
+  </main>
 </body>
 </html>
