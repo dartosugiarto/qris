@@ -5,119 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>PlayPal.ID — QRIS</title>
 
-<!-- ================== ULTRA APPLE PREMIUM (STATIS) ================== -->
 <style>
-  /* ---- Palet & ukuran presisi (px), tanpa responsif/animasi ---- */
   :root{
-    --page-bg: #F5F5F7;     /* Apple light gray */
-    --card-bg: #FFFFFF;     /* Putih bersih */
-    --text:    #0E0E11;     /* Nyaris hitam yang lembut */
-    --muted:   #6E6E73;     /* iOS gray untuk teks bantu */
-    --hair:    rgba(0,0,0,.10); /* Hairline 1px */
-    --card-w:  384px;       /* Lebar kartu fix */
-    --card-r:  22px;        /* Radius kartu */
-    --card-p:  28px;        /* Padding kartu */
-    --title-fs: 22px;       /* Ukuran judul fix */
-    --qr-pad:  14px;        /* Padding bingkai QR */
-    --qr-r:    16px;        /* Radius bingkai QR */
+    --page-bg: #F5F5F7;   /* Apple abu-abu lembut */
+    --text:    #0E0E11;   /* Hitam lembut */
+    --muted:   #6E6E73;   /* iOS gray */
+    --qr-pad:  14px;
+    --qr-r:    16px;
+    --title-fs: 22px;
+    --max-w:   360px;     /* Lebar maksimum konten */
   }
 
-  /* ---- Reset halus ---- */
   *{ box-sizing: border-box; }
-  html, body { height: 100%; }
+  html,body{height:100%}
   body{
-    margin: 0;
+    margin:0;
     background: var(--page-bg);
     color: var(--text);
     font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
           "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-
-    /* Halaman statis: tidak bisa di-scroll/geser */
-    overflow: hidden;
+    overflow:hidden; /* statis */
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
   }
 
-  /* ---- Kartu dikunci di tengah viewport (tanpa gerak) ---- */
-  .card{
-    position: fixed;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-
-    width: var(--card-w);
-    padding: var(--card-p);
-    background: var(--card-bg);
-    border: 1px solid var(--hair);
-    border-radius: var(--card-r);
-
-    /* Bayangan premium: tipis, terkontrol */
-    box-shadow:
-      0 1px 2px rgba(0,0,0,.06),
-      0 10px 30px rgba(0,0,0,.12);
-  }
-
-  /* ---- Judul brand (tunggal, tebal, center) ---- */
   .brand{
-    margin: 0 0 18px 0;
-    text-align: center;
+    margin: 0 0 20px 0;
     font-weight: 700;
     font-size: var(--title-fs);
     letter-spacing: .2px;
+    text-align:center;
   }
 
-  /* ---- QR hitam dengan bingkai putih bersih untuk kontras scanner ---- */
   .qr{
-    display: block;
-    width: 100%;
-    height: auto;
-    max-width: calc(var(--card-w) - (var(--card-p) * 2));
-    margin: 0 auto;
-
-    background: #FFFFFF;
-    border: 1px solid rgba(0,0,0,.08);
+    display:block;
+    width:100%;
+    max-width: var(--max-w);
+    background:#fff; /* frame QR */
+    border:1px solid rgba(0,0,0,.08);
     border-radius: var(--qr-r);
     padding: var(--qr-pad);
-
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
 
-  /* ---- Caption halus (opsional). Hapus jika ingin super-minimal ---- */
   .hint{
-    margin: 12px 0 0 0;
-    text-align: center;
-    font-size: 12px;
-    color: var(--muted);
-    user-select: none;
+    margin-top:16px;
+    font-size:12px;
+    color:var(--muted);
+    text-align:center;
+    user-select:none;
   }
 
-  /* ---- Mode cetak tetap presisi & bersih ---- */
   @media print{
-    body{ background: #fff; overflow: visible; }
-    .card{
-      position: static; transform: none; margin: 0 auto;
-      box-shadow: none; border: none; border-radius: 0; padding: 0;
-      width: var(--card-w);
-    }
-    .hint{ display: none; }
+    body{background:#fff;overflow:visible}
+    .hint{display:none}
   }
 </style>
 </head>
 <body>
-  <main class="card" aria-label="Kartu QRIS PlayPal.ID">
-    <h1 class="brand">PlayPal.ID</h1>
+  <h1 class="brand">PlayPal.ID</h1>
 
-    <!-- GANTI src di bawah dengan file QRIS hitam-putih milikmu -->
-    <img
-      class="qr"
-      src="qris.png"
-      alt="Kode QRIS PlayPal.ID"
-      loading="eager"
-      decoding="async"
-    />
+  <!-- Ganti src dengan file QRIS hitam-putih kamu -->
+  <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID"/>
 
-    <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
-  </main>
+  <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
 </body>
 </html>
