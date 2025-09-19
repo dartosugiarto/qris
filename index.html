@@ -7,73 +7,287 @@
 
 <style>
   :root{
-    --page-bg: #F5F5F7;   /* Apple abu-abu lembut */
-    --text:    #0E0E11;   /* Hitam lembut */
-    --muted:   #6E6E73;   /* iOS gray */
-    --qr-pad:  14px;
-    --qr-r:    16px;
-    --title-fs: 22px;
-    --max-w:   360px;     /* Lebar maksimum konten */
+    /* Palet ala Apple */
+    --page-bg:    #F5F5F7;
+    --page-bg-2:  #ECECEF;
+    --ink:        #0E0E11;
+    --muted:      #6E6E73;
+    --card:       #FFFFFF;
+    --border:     rgba(0,0,0,.08);
+
+    /* Layout */
+    --max-w:      360px;
+    --qr-pad:     14px;
+    --qr-r:       16px;
+
+    /* Teks */
+    --title-fs:   22px;
+    --base-fs:    16px;
+
+    /* Depth */
+    --shadow-sm:  0 1px 2px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+    --shadow-md:  0 2px 6px rgba(0,0,0,.08), 0 20px 48px rgba(0,0,0,.10);
+
+    /* Animasi */
+    --dur-1: .7s;
+    --dur-2: 1.2s;
+    --dur-3: 14s;
+    --easing: cubic-bezier(.22,.61,.36,1);
+  }
+
+  /* Dark mode otomatis */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --page-bg:   #0B0B0D;
+      --page-bg-2: #111114;
+      --ink:       #F5F5F7;
+      --muted:     #9A9AA1;
+      --card:      #131316;
+      --border:    rgba(255,255,255,.08);
+      --shadow-sm: 0 1px 2px rgba(0,0,0,.35), 0 8px 24px rgba(0,0,0,.35);
+      --shadow-md: 0 2px 6px rgba(0,0,0,.4),  0 20px 48px rgba(0,0,0,.5);
+    }
   }
 
   *{ box-sizing: border-box; }
-  html,body{height:100%}
+  html,body{ height:100%; }
   body{
     margin:0;
-    background: var(--page-bg);
-    color: var(--text);
-    font: 16px/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
+    color: var(--ink);
+    font: var(--base-fs)/1.5 -apple-system, BlinkMacSystemFont, "SF Pro Text",
           "Helvetica Neue", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    overflow:hidden; /* statis */
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
+
+    /* Latar premium: dua radial gradient yang mengambang halus */
+    background:
+      radial-gradient(1200px 600px at 10% -10%, var(--page-bg-2) 0%, transparent 60%),
+      radial-gradient(1000px 500px at 110% 120%, var(--page-bg-2) 0%, transparent 60%),
+      var(--page-bg);
+    overflow:hidden;
+    display:grid;
+    place-items:center;
+  }
+
+  /* Lapisan “glow grid” sangat halus */
+  .ambient {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60vmax 60vmax at var(--gx,70%) var(--gy,30%), rgba(255,255,255,.18), transparent 60%);
+    mix-blend-mode: soft-light;
+    filter: blur(20px) saturate(110%);
+    animation: ambientMove var(--dur-3) linear infinite alternate;
+  }
+  @keyframes ambientMove {
+    0%   { --gx: 72%; --gy: 28%; }
+    100% { --gx: 28%; --gy: 72%; }
+  }
+
+  .wrap{
+    width: min(92vw, 440px);
+    padding: 28px 22px 24px;
+    border-radius: 20px;
+    background: color-mix(in srgb, var(--card) 88%, transparent);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    backdrop-filter: saturate(140%) blur(8px);
+    transform: translateY(6px) scale(.985);
+    opacity: 0;
+    animation: flyIn var(--dur-1) var(--easing) forwards;
+  }
+  @keyframes flyIn{
+    to{ transform: translateY(0) scale(1); opacity: 1; box-shadow: var(--shadow-md); }
   }
 
   .brand{
-    margin: 0 0 20px 0;
+    margin:0 0 14px 0;
     font-weight: 700;
     font-size: var(--title-fs);
     letter-spacing: .2px;
     text-align:center;
+    background: linear-gradient(90deg, currentColor 0%, color-mix(in srgb, currentColor 70%, #888) 60%, currentColor 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    position: relative;
+    isolation: isolate;
   }
+  /* Garis halus di bawah judul */
+  .brand::after{
+    content:"";
+    display:block;
+    height:1px;
+    width: 56px;
+    margin: 10px auto 0;
+    background: linear-gradient(90deg, transparent, color-mix(in srgb, currentColor 35%, transparent), transparent);
+    transform-origin: center;
+    animation: breathe var(--dur-2) ease-in-out infinite alternate;
+    opacity:.6;
+  }
+  @keyframes breathe { to { transform: scaleX(1.08); opacity:.9; } }
+
+  .qr-card{
+    position: relative;
+    border-radius: calc(var(--qr-r) + 8px);
+    padding: 10px;
+    background:
+      linear-gradient(180deg, color-mix(in srgb, var(--card) 92%, transparent), color-mix(in srgb, var(--card) 82%, transparent)),
+      var(--card);
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+    transition: transform .6s var(--easing), box-shadow .6s var(--easing), filter .6s var(--easing);
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
+  /* Lapisan “sheen” tipis menyapu saat hover */
+  .qr-card::before{
+    content:"";
+    position:absolute; inset:0;
+    border-radius: inherit;
+    background:
+      linear-gradient(115deg, transparent 25%, rgba(255,255,255,.12) 35%, transparent 45%) no-repeat;
+    background-size: 200% 200%;
+    background-position: -120% -120%;
+    mix-blend-mode: screen;
+    pointer-events:none;
+    transition: background-position 900ms var(--easing);
+  }
+  .qr-card:hover::before{ background-position: 120% 120%; }
 
   .qr{
     display:block;
     width:100%;
     max-width: var(--max-w);
-    background:#fff; /* frame QR */
-    border:1px solid rgba(0,0,0,.08);
+    background:#fff;
+    border:1px solid var(--border);
     border-radius: var(--qr-r);
     padding: var(--qr-pad);
     object-fit: contain;
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
+    transform: translateZ(20px);
   }
 
   .hint{
-    margin-top:16px;
+    margin-top:14px;
     font-size:12px;
     color:var(--muted);
     text-align:center;
     user-select:none;
+    opacity:0;
+    transform: translateY(6px);
+    animation: riseIn .8s var(--easing) .2s forwards;
+  }
+  @keyframes riseIn { to { opacity:1; transform: translateY(0); } }
+
+  /* Tilt mikro saat hover/kursor */
+  .interactive:hover .qr-card{
+    transform: perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0) scale(1.003);
+  }
+
+  /* Preferensi aksesibilitas: minimalkan gerak */
+  @media (prefers-reduced-motion: reduce){
+    .ambient{ display:none; }
+    .wrap, .hint{ animation: none; opacity:1; transform:none; }
+    .qr-card, .interactive:hover .qr-card{ transform:none; transition:none; }
+    .brand::after{ animation: none; }
   }
 
   @media print{
-    body{background:#fff;overflow:visible}
-    .hint{display:none}
+    body{ background:#fff; }
+    .ambient{ display:none; }
+    .wrap{ box-shadow:none; backdrop-filter:none; border:none; padding:0 }
+    .brand{ color:#000; -webkit-background-clip: initial; background: none; }
+    .brand::after, .hint{ display:none; }
   }
 </style>
 </head>
 <body>
-  <h1 class="brand">PlayPal.ID</h1>
+  <!-- Ambient glow super halus -->
+  <div class="ambient" aria-hidden="true"></div>
 
-  <!-- Ganti src dengan file QRIS hitam-putih kamu -->
-  <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID"/>
+  <main class="wrap interactive" aria-label="Kode QR Pembayaran PlayPal.ID">
+    <h1 class="brand">PlayPal.ID</h1>
 
-  <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
+    <section class="qr-card" id="qrCard" aria-label="Bingkai QR">
+      <!-- Ganti src dengan file QRIS hitam-putih kamu -->
+      <img class="qr" src="qris.png" alt="Kode QRIS PlayPal.ID"/>
+    </section>
+
+    <p class="hint">Scan dengan aplikasi berlogo QRIS</p>
+  </main>
+
+<script>
+/* Tilt lembut mengikuti kursor / gyro, tetap aman & hemat gerak */
+(() => {
+  const root   = document.documentElement;
+  const card   = document.getElementById('qrCard');
+  const wrap   = document.querySelector('.interactive');
+
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!card || prefersReduced) return;
+
+  let rafId = null;
+  let rx = 0, ry = 0; // derajat target
+  const maxTilt = 6;  // derajat maksimum
+
+  function onPointerMove(e){
+    const rect = card.getBoundingClientRect();
+    const cx = rect.left + rect.width/2;
+    const cy = rect.top  + rect.height/2;
+    const dx = (e.clientX - cx) / (rect.width/2);
+    const dy = (e.clientY - cy) / (rect.height/2);
+    ry =  (dx * maxTilt);   // rotasi Y mengikuti X
+    rx =  (-dy * maxTilt);  // rotasi X mengikuti Y (kebalikan)
+    schedule();
+  }
+
+  function schedule(){
+    if (rafId) return;
+    rafId = requestAnimationFrame(() => {
+      root.style.setProperty('--rx', rx.toFixed(2) + 'deg');
+      root.style.setProperty('--ry', ry.toFixed(2) + 'deg');
+      rafId = null;
+    });
+  }
+
+  // Reset saat keluar
+  function onLeave(){
+    rx = 0; ry = 0; schedule();
+  }
+
+  wrap.addEventListener('pointermove', onPointerMove);
+  wrap.addEventListener('pointerleave', onLeave);
+
+  // Dukungan perangkat bergerak: gunakan DeviceOrientation jika ada izin
+  function onOrientation(e){
+    if (typeof e.beta !== 'number' || typeof e.gamma !== 'number') return;
+    const nx = Math.max(-30, Math.min(30, e.beta))  / 30;  // -1..1
+    const ny = Math.max(-30, Math.min(30, e.gamma)) / 30;
+    rx = (-nx * maxTilt);
+    ry = ( ny * maxTilt);
+    schedule();
+  }
+
+  if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission === 'function'){
+    // iOS: minta izin saat pertama kali tap
+    const ask = () => {
+      DeviceOrientationEvent.requestPermission().then(state => {
+        if (state === 'granted'){
+          window.addEventListener('deviceorientation', onOrientation, true);
+        }
+      }).catch(()=>{}).finally(()=>{
+        window.removeEventListener('click', ask);
+      });
+    };
+    window.addEventListener('click', ask);
+  } else {
+    window.addEventListener('deviceorientation', onOrientation, true);
+  }
+})();
+</script>
 </body>
 </html>
